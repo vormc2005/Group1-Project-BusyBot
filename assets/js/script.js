@@ -10,39 +10,27 @@ $(document).ready(function() {
 //if user can reach destination in time,
 //display event
 
-// var apikey = 'AIzaSyCdwSi0A_uN2spOdWzV1sDL0U0s9erF9Dc';
-// getMap();
-// function getMap(city){
-//   $.ajax({
-//     url: 'https://maps.googleapis.com/maps/api/js',
-//     method: 'GET',
-//     data: {
-//       key: apikey,
-//     }
-//   }).then(function(response) {
-//     console.log(response);
-//   });
-// }//getMap()
-var btn = $('#getLoc');
-btn.on('click', getLocation());
+var getLocationBtn = $('#getLoc');
+getLocationBtn.on('click', getLocation());
+var currentAddress;
 
-var x = document.getElementById("demo");
+var demo = document.getElementById("demo");
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
   } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
+    demo.innerHTML = "Geolocation is not supported by this browser.";
   }
 }
 
 function showPosition(position) {
   var lat = position.coords.latitude;
   var lon = position.coords.longitude
-  x.innerHTML = "Latitude: " + position.coords.latitude +
+  demo.innerHTML = "Latitude: " + position.coords.latitude +
   "<br>Longitude: " + position.coords.longitude;
   getStreet(lat, lon);
 }
-var apikey= '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
+var apikey = '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
 
 function getStreet(lat, lon) {
   $.ajax({
@@ -55,6 +43,8 @@ function getStreet(lat, lon) {
     }
   }).then(function(response) {
     console.log(response);
+    currentAddress = response.results[0].locations[0].street;
+    console.log(currentAddress);
   });
 }
 })//document ready
