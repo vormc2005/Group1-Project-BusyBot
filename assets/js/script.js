@@ -13,7 +13,17 @@ $(document).ready(function() {
 var lat="";
 var lon ="";
 var currentAddress = "";
+var currentTime = moment();
 var travelTime;
+var locationsDropdown = ['District of Columbia', 'New York City', 'Philadelphia'];
+var timeDropdown = [];
+var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
+
+// Get DOM elements
+var searchbarDOM = $('.search');
+var locationMenuDOM = $('.location-menu');
+var timeMenuDOM = $('.time-menu');
+var categoryMenuDOM = $('.category-menu');
 
   //HTML5 get current lat and lon
   function getCurrentLocation() {
@@ -83,6 +93,60 @@ var travelTime;
         console.log(travelMins);
       }, "json");
   }
+  makeDropdowns();
 
-//document ready end point 
-});
+  // Get hours, push to timeDropdown array
+  var currentHour = moment().format('h');
+  for( var i = 0; i < 11; i++ ){
+    timeDropdown.push(parseInt(currentHour) + i);
+  }
+  console.log(timeDropdown);
+
+  // Make dropdown elements
+  function makeDropdowns() {
+    for( var i = 0; i < locationsDropdown.length; i++ ){
+      var locationMenuItem = $('<a>');
+      locationMenuItem.addClass('dropdown-item');
+      locationMenuItem.addClass('location-item');
+      var itemText = locationsDropdown[i];
+      locationMenuItem.text(itemText);
+      locationMenuItem.on('click', function() {
+        console.log($(this).text());
+      });
+
+      locationMenuDOM.append(locationMenuItem);
+    }
+    // Get hours, push to timeDropdown array
+    var currentHour = moment().format('h');
+    for( var i = 0; i < 11; i++ ){
+      timeDropdown.push(parseInt(currentHour) + i);
+    }
+    console.log(timeDropdown);
+
+    for( var i = 0; i < timeDropdown.length; i++ ){
+      var timeMenuItem = $('<a>');
+      timeMenuItem.addClass('dropdown-item');
+      timeMenuItem.addClass('time-item');
+      var itemText = timeDropdown[i];
+      timeMenuItem.text(itemText);
+      timeMenuItem.on('click', function() {
+        console.log($(this).text());
+      });
+
+      timeMenuDOM.append(timeMenuItem);
+    }
+    for( var i = 0; i < categoryDropdown.length; i++ ){
+      var categoryMenuItem = $('<a>');
+      categoryMenuItem.addClass('dropdown-item');
+      categoryMenuItem.addClass('category-item');
+      var itemText = categoryDropdown[i];
+      categoryMenuItem.text(itemText);
+      categoryMenuItem.on('click', function() {
+        console.log($(this).text());
+      });
+
+      categoryMenuDOM.append(categoryMenuItem);
+    }
+  }
+
+})//document ready end point 
