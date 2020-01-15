@@ -17,9 +17,10 @@ var currentAddress = "";
   function getCurrentLocation() {
       function success(position) {
         lat = position.coords.latitude;
-        long = position.coords.longitude;
+        lon = position.coords.longitude;
         console.log(lat);
         console.log(lon);
+        getStreet();
       }
       function error() {
         console.log('Unable to retrieve your location');
@@ -33,6 +34,7 @@ var currentAddress = "";
     }
     getCurrentLocation();
     
+  // Ticket Master AJAX
   $.ajax({
       url: "https://app.ticketmaster.com/discovery/v2/events.json?",
       method: "GET",
@@ -44,6 +46,7 @@ var currentAddress = "";
   }).done(function (response) {
       console.log(response);
   });
+  // Current Location Street Adress AJAX
   function getStreet() {
     var apikey = '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
     $.ajax({
