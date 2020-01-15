@@ -13,9 +13,10 @@ $(document).ready(function() {
 var lat="";
 var lon ="";
 var currentAddress = "";
+var currentTime = moment();
 var travelTime;
 var locationsDropdown = ['District of Columbia', 'New York City', 'Philadelphia'];
-var timeDropdown = ['7PM', '8PM', '9PM', '10PM', '11PM', '12PM'];
+var timeDropdown = [];
 var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
 
 // Get DOM elements
@@ -93,11 +94,15 @@ var categoryMenuDOM = $('.category-menu');
       }, "json");
   }
   makeDropdowns();
+
+  // Get hours, push to timeDropdown array
+  var currentHour = moment().format('h');
+  for( var i = 0; i < 11; i++ ){
+    timeDropdown.push(parseInt(currentHour) + i);
+  }
+  console.log(timeDropdown);
+
   // Make dropdown elements
-  // fill inner text with locationsDropdown, timeDropdown, categoryDropdown
-  // add class dropdown-item
-  // add class location/time/category-item
-  // add event listeners
   function makeDropdowns() {
     for( var i = 0; i < locationsDropdown.length; i++ ){
       var locationMenuItem = $('<a>');
@@ -111,6 +116,13 @@ var categoryMenuDOM = $('.category-menu');
 
       locationMenuDOM.append(locationMenuItem);
     }
+    // Get hours, push to timeDropdown array
+    var currentHour = moment().format('h');
+    for( var i = 0; i < 11; i++ ){
+      timeDropdown.push(parseInt(currentHour) + i);
+    }
+    console.log(timeDropdown);
+
     for( var i = 0; i < timeDropdown.length; i++ ){
       var timeMenuItem = $('<a>');
       timeMenuItem.addClass('dropdown-item');
