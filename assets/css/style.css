@@ -4,6 +4,24 @@ body {
   background-size: cover;
 }
 
+.block {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  clear: both;
+  box-sizing: border-box;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.backpic {
+  background-image: url('../images/still.png');
+  background-size: cover;
+  z-index: 1;
+}
+
 .searchbar {
   margin: 15em auto 0em auto;
   width: 50%;

@@ -13,7 +13,9 @@ $(document).ready(function() {
 var lat="";
 var lon ="";
 var currentAddress = "";
+var travelTime;
 
+  //HTML5 get current lat and lon
   function getCurrentLocation() {
       function success(position) {
         lat = position.coords.latitude;
@@ -46,7 +48,8 @@ var currentAddress = "";
   }).done(function (response) {
       console.log(response);
   });
-  // Current Location Street Adress AJAX
+
+  // Current Location Street Address AJAX from lat and lon
   function getStreet() {
     var apikey = '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
     $.ajax({
@@ -61,9 +64,25 @@ var currentAddress = "";
       console.log(response);
       currentAddress = response.results[0].locations[0].street;
       console.log(currentAddress);
+      getRoute(currentAddress);
     });
   }
- 
+
+  // Travel time AJAX from currentAddress
+  function getRoute(currentAddress){
+    $.post("http://www.mapquestapi.com/directions/v2/routematrix?key=XBEFbd4lAqBbeNeE8QyUcxIbYlnlARLz",
+      "json=" + JSON.stringify({
+        'locations': [currentAddress, 'Washington, DC'],
+        'options': { 'allToAll': false }
+      }),
+      function (response) {
+        console.log(response);
+        travelTime = response.time[1];
+        // Round travelTime into nearest minute
+        var travelMins = Math.round(travelTime/60);
+        console.log(travelMins);
+      }, "json");
+  }
 
 
 //document ready end point 
