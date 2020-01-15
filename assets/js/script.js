@@ -10,42 +10,58 @@ $(document).ready(function() {
 //if user can reach destination in time,
 //display event
 
+var lat="";
+var lon ="";
+var currentAddress = "";
 
-var getLocationBtn = $('#getLoc');
-getLocationBtn.on('click', getLocation());
-var currentAddress;
-
-var demo = document.getElementById("demo");
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    demo.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-
-function showPosition(position) {
-  var lat = position.coords.latitude;
-  var lon = position.coords.longitude
-  demo.innerHTML = "Latitude: " + position.coords.latitude +
-  "<br>Longitude: " + position.coords.longitude;
-  getStreet(lat, lon);
-}
-var apikey = '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
-
-function getStreet(lat, lon) {
-  $.ajax({
-    url: 'http://www.mapquestapi.com/geocoding/v1/reverse',
-    dataType: 'json',
-    method: 'GET',
-    data: {
-      location: lat + "," + lon,
-      key: apikey,
+  function getCurrentLocation() {
+      function success(position) {
+        lat = position.coords.latitude;
+        long = position.coords.longitude;
+        console.log(lat);
+        console.log(lon);
+      }
+      function error() {
+        console.log('Unable to retrieve your location');
+      }
+      if (!navigator.geolocation) {
+        console.log('Geolocation is not supported by your browser');
+      } else {
+        console.log('Locating…');
+        navigator.geolocation.getCurrentPosition(success, error);
+      }
     }
-  }).then(function(response) {
-    console.log(response);
-    currentAddress = response.results[0].locations[0].street;
-    console.log(currentAddress);
+    getCurrentLocation();
+    
+  $.ajax({
+      url: "https://app.ticketmaster.com/discovery/v2/events.json?",
+      method: "GET",
+      data:{
+          apikey: "xB4pwlx2qXShKTb5vBvUcL98KBiIpsdp",
+          countryCode: "US",
+          keyword: ""
+      }
+  }).done(function (response) {
+      console.log(response);
   });
-}
-})//document ready
+  function getStreet() {
+    var apikey = '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
+    $.ajax({
+      url: 'http://www.mapquestapi.com/geocoding/v1/reverse',
+      dataType: 'json',
+      method: 'GET',
+      data: {
+        location: lat + "," + lon,
+        key: apikey,
+      }
+    }).then(function(response) {
+      console.log(response);
+      currentAddress = response.results[0].locations[0].street;
+      console.log(currentAddress);
+    });
+  }
+ 
+
+
+//document ready end point 
+});
