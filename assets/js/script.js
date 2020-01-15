@@ -84,6 +84,5 @@ var travelTime;
       }, "json");
   }
 
-
 //document ready end point 
 });
