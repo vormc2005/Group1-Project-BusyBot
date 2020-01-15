@@ -12,8 +12,9 @@ $(document).ready(function() {
 
 var lat="";
 var lon ="";
-var currentAddress = "";
-var currentTime = moment();
+var searchAddress;
+var searchTime;
+var searchCategory;
 var travelTime;
 var locationsDropdown = ['District of Columbia', 'New York City', 'Philadelphia'];
 var timeDropdown = [];
@@ -25,29 +26,48 @@ var locationMenuDOM = $('.location-menu');
 var timeMenuDOM = $('.time-menu');
 var categoryMenuDOM = $('.category-menu');
 
-  //HTML5 get current lat and lon
-  function getCurrentLocation() {
-      function success(position) {
-        lat = position.coords.latitude;
-        lon = position.coords.longitude;
-        console.log(lat);
-        console.log(lon);
-        getStreet();
-      }
-      function error() {
-        console.log('Unable to retrieve your location');
-      }
-      if (!navigator.geolocation) {
-        console.log('Geolocation is not supported by your browser');
-      } else {
-        console.log('Locating…');
-        navigator.geolocation.getCurrentPosition(success, error);
-      }
-    }
-    getCurrentLocation();
-    
+//HTML5 retrieve permission from user to get current location (lat and long)
+function getCurrentLocation() {
+  function success(position) {
+    //if permission granted set call setAddress to convert lat and long to street adresss
+    lat = position.coords.latitude;
+    lon = position.coords.longitude;
+    setAddress();
+  }
+  function denied() {
+    // if permission is denied set address query to "Arlington" and call main (set time and category)
+    console.log('Unable to retrieve your location');
+    searchAddress = "Arlington, VA";
+    main();
+  }
+  if (!navigator.geolocation) {
+    console.log('Geolocation is not supported by your browser');
+  } else {
+    console.log('Locating…');
+    navigator.geolocation.getCurrentPosition(success, denied);
+  }
+}
+function setAddress(){
+  getStreet();
+}
+function setTime(){
+  searchTime = moment().format("LTS");
+}
+function setEvent(){
+  searchCategory = "";
+}
+function main(){
+  //inital set adress achieve from current location call on request prompt to user
+  setTime();
+  setEvent();
+  console.log(searchAddress);
+  console.log(searchTime);
+  console.log(searchCategory);
+}
+
   // Ticket Master AJAX
-  $.ajax({
+  function accessTicketMaster(){
+    $.ajax({
       url: "https://app.ticketmaster.com/discovery/v2/events.json?",
       method: "GET",
       data:{
@@ -58,6 +78,8 @@ var categoryMenuDOM = $('.category-menu');
   }).done(function (response) {
       console.log(response);
   });
+  }
+ 
 
   // Current Location Street Address AJAX from lat and lon
   function getStreet() {
@@ -71,18 +93,18 @@ var categoryMenuDOM = $('.category-menu');
         key: apikey,
       }
     }).then(function(response) {
-      console.log(response);
-      currentAddress = response.results[0].locations[0].street;
-      console.log(currentAddress);
-      getRoute(currentAddress);
+      // console.log(response);
+      searchAddress = response.results[0].locations[0].street;
+      console.log(searchAddress);
+      main();
+      // getRoute(searchAddress);
     });
   }
-
   // Travel time AJAX from currentAddress
-  function getRoute(currentAddress){
+  function getRoute(searchAddress){
     $.post("http://www.mapquestapi.com/directions/v2/routematrix?key=XBEFbd4lAqBbeNeE8QyUcxIbYlnlARLz",
       "json=" + JSON.stringify({
-        'locations': [currentAddress, 'Washington, DC'],
+        'locations': [searchAddress, 'Washington, DC'],
         'options': { 'allToAll': false }
       }),
       function (response) {
@@ -93,6 +115,8 @@ var categoryMenuDOM = $('.category-menu');
         console.log(travelMins);
       }, "json");
   }
+
+
   makeDropdowns();
 
   // Get hours, push to timeDropdown array
@@ -104,6 +128,7 @@ var categoryMenuDOM = $('.category-menu');
 
   // Make dropdown elements
   function makeDropdowns() {
+
     for( var i = 0; i < locationsDropdown.length; i++ ){
       var locationMenuItem = $('<a>');
       locationMenuItem.addClass('dropdown-item');
@@ -111,7 +136,8 @@ var categoryMenuDOM = $('.category-menu');
       var itemText = locationsDropdown[i];
       locationMenuItem.text(itemText);
       locationMenuItem.on('click', function() {
-        console.log($(this).text());
+        searchCategory = $(this).text();
+        console.log(searchCategory);
       });
 
       locationMenuDOM.append(locationMenuItem);
@@ -130,7 +156,8 @@ var categoryMenuDOM = $('.category-menu');
       var itemText = timeDropdown[i];
       timeMenuItem.text(itemText);
       timeMenuItem.on('click', function() {
-        console.log($(this).text());
+        searchTime = $(this).text();
+        console.log(searchTime);
       });
 
       timeMenuDOM.append(timeMenuItem);
@@ -142,11 +169,12 @@ var categoryMenuDOM = $('.category-menu');
       var itemText = categoryDropdown[i];
       categoryMenuItem.text(itemText);
       categoryMenuItem.on('click', function() {
+
         console.log($(this).text());
       });
 
       categoryMenuDOM.append(categoryMenuItem);
     }
   }
-
+  getCurrentLocation();
 })//document ready end point 
