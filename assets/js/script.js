@@ -10,6 +10,7 @@ $(document).ready(function() {
 //if user can reach destination in time,
 //display event
 
+
 var getLocationBtn = $('#getLoc');
 getLocationBtn.on('click', getLocation());
 var currentAddress;

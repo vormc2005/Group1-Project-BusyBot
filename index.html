@@ -5,21 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Group Project 01</title>
-  <!-- reference materialize -->
-  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  <!-- reference bootstrap -->
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <!-- reference google fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700&display=swap" rel="stylesheet">
   <!-- reference our css -->
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-  <button id="getLoc">Try It</button>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="searchbar">
+          <div class="active-pink-3 active-pink-4 mb-4">
+            <input class="form-control search" type="text" placeholder="search events" aria-label="Search">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="options">
+          <!-- Dropdown Structure -->
+          <!-- <button type="button" class="btn btn-outline-dark btn-lg">Location</button>
+          <button type="button" class="btn btn-outline-dark btn-lg">Time</button>
+          <button type="button" class="btn btn-outline-dark btn-lg">Category</button> -->
+          <ul class="nav nav-pills">
+            <li class="nav-item dropdown location-menu menu">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">LOCATION</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item location-item" href="#">District of Columbia</a>
+                <a class="dropdown-item location-item"" href="#">New York City</a>
+                <a class="dropdown-item location-item"" href="#">Philadelphia</a>
+              </div>
+            </li>
+            <li class="nav-item dropdown time-menu menu">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">TIME</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item time-item" href="#"></a>
+                <a class="dropdown-item time-item" href="#"></a>
+                <a class="dropdown-item time-item" href="#"></a>
+              </div>
+            </li>
+            <li class="nav-item dropdown category-menu menu">
+              <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">CATEGORY</a>
+              <div class="dropdown-menu">
+                <a class="dropdown-item category-item" href="#">Sports</a>
+                <a class="dropdown-item category-item" href="#">Music</a>
+                <a class="dropdown-item category-item" href="#">Theater</a>
+                <a class="dropdown-item category-item" href="#">Dance</a>
+                <a class="dropdown-item category-item" href="#">Other</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="getLoc">get location</button>
   <div id="demo"></div>
 
-   <!-- reference Materialize -->
-   <script type="text/javascript" src="js/materialize.min.js"></script>
   <!-- reference jQuery -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <!-- reference our js -->
   <script src="./assets/js/script.js" async defer></script>
+  <!-- reference Bootstrap -->
+  <!-- <script src="https://unpkg.com/@popperjs/core@2.0.0-rc.1"></script> -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 </body>
 </html>
