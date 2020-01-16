@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
   <!-- reference google fonts -->
   <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700&display=swap" rel="stylesheet">
+  <!-- reference font awesome -->
+  <link rel="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- reference Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"></script>
   <!-- reference our css -->
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
@@ -19,8 +23,12 @@
       <div class="col-12">
         <div class="searchbar">
           <div class="active-pink-3 active-pink-4 mb-4">
-            <input class="form-control search" type="text" placeholder="search events" aria-label="Search">
-          </div>
+            <input class="animated form-control search bounceInDown" id="search-input" type="text" placeholder="search events" aria-label="Search">
+              <span class="animated bounceInDown" id="search-btn">
+                <!-- <i class="fas fa-search"></i> -->
+                <img class="search-icon" src="assets/images/search.png">
+              </span>
+          </div> 
         </div>
       </div>
     </div>
@@ -28,34 +36,23 @@
       <div class="col-12">
         <div class="options">
           <!-- Dropdown Structure -->
-          <!-- <button type="button" class="btn btn-outline-dark btn-lg">Location</button>
-          <button type="button" class="btn btn-outline-dark btn-lg">Time</button>
-          <button type="button" class="btn btn-outline-dark btn-lg">Category</button> -->
-          <ul class="nav nav-pills">
+          <ul class="animated nav nav-pills bounceInUp">
             <li class="nav-item dropdown menu">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">LOCATION</a>
               <div class="dropdown-menu location-menu">
-                <!-- <a class="dropdown-item location-item" href="#">District of Columbia</a>
-                <a class="dropdown-item location-item" href="#">New York City</a>
-                <a class="dropdown-item location-item" href="#">Philadelphia</a> -->
+                <!-- <a class="dropdown-item location-item" href="#">District of Columbia</a> -->
               </div>
             </li>
             <li class="nav-item dropdown menu">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">TIME</a>
               <div class="dropdown-menu time-menu">
-                <!-- <a class="dropdown-item time-item" href="#"></a>
-                <a class="dropdown-item time-item" href="#"></a>
-                <a class="dropdown-item time-item" href="#"></a> -->
+                <!-- <a class="dropdown-item time-item" href="#"></a> -->
               </div>
             </li>
             <li class="nav-item dropdown menu">
               <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">CATEGORY</a>
               <div class="dropdown-menu category-menu">
-                <!-- <a class="dropdown-item category-item" href="#">Sports</a>
-                <a class="dropdown-item category-item" href="#">Music</a>
-                <a class="dropdown-item category-item" href="#">Theater</a>
-                <a class="dropdown-item category-item" href="#">Dance</a>
-                <a class="dropdown-item category-item" href="#">Other</a> -->
+                <!-- <a class="dropdown-item category-item" href="#">Sports</a> -->
               </div>
             </li>
           </ul>
