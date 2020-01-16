@@ -29,6 +29,7 @@ var timeDropdown = [];
 var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
 
 // Get DOM elements
+var searchBtn = $('#search-btn');
 var searchbarDOM = $('.search');
 var locationMenuDOM = $('.location-menu');
 var timeMenuDOM = $('.time-menu');
@@ -138,6 +139,15 @@ function main(){
       }, "json");
   }
 
+  searchBtn.on('click', function() {
+    // $('.header').slideUp();
+    $('.header').animate({
+      'marginTop' : "-92px"
+    });
+    searchbarDOM.animate({
+      'marginTop' : "1.5em"
+    }, "slow");
+  });
 
   makeDropdowns();
 
@@ -163,19 +173,6 @@ function main(){
     // Get hours, push to timeDropdown array
     // military
     var currentHour = moment().format('H');
-    // // console.log(currentHour);
-    // if( (parseInt(currentHour) + 12) < 24){
-    //   for( var i = 0; (parseInt(currentHour) + 12) < 23; i++ ){
-    //     currentHour = moment().add(i, 'h').format('ha');
-    //     timeDropdown.push(currentHour);
-    //   }
-    // } else if( (parseInt(currentHour) + 12) > 24 ){
-    //   for( var i = 0; (parseInt(currentHour) + 12) < 23; i++ ){
-    //     currentHour = moment().add(i, 'h').format('ha');
-    //     timeDropdown.push(currentHour);
-    //   }
-    // }
-    //NOT WORKING
     // if the currentHour (in military time) is in the morning,
     // add up to 12 hours
     if( (parseInt(currentHour) + 12) < 24){
@@ -190,6 +187,7 @@ function main(){
         timeDropdown.push(currentHour);
       }
     }
+
     for( var i = 0; i < timeDropdown.length; i++ ){
       var timeMenuItem = $('<a>');
       timeMenuItem.addClass('dropdown-item');

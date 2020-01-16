@@ -4,6 +4,17 @@ body {
   background-size: cover;
 }
 
+.header {
+  margin: 12em auto 0em auto;
+  /* width: 50%; */
+  text-align: center;
+}
+
+h1 {
+  font-family: 'Oleo Script' , cursive;
+  font-size: 5em;
+}
+
 .block {
   display: block;
   margin-right: auto;
@@ -23,13 +34,15 @@ body {
 }
 @media (min-width: 500px) {
   .searchbar {
-    margin: 15em auto 2em auto;
+    /* margin: 1.5em auto 2em auto; */
+    margin: auto;
     width: 75%;
   }
 }
 @media (min-width: 992px) {
   .searchbar {
-    margin: 15em auto 2em auto;
+    /* margin: 15em auto 2em auto; */
+    margin: auto;
     width: 50%;
   }
 }
