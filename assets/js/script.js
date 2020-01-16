@@ -51,7 +51,7 @@ function setAddress(){
   getStreet();
 }
 function setTime(){
-  searchTime = moment().format("LTS");
+  searchTime = moment().format("LL");
 }
 function setEvent(){
   searchCategory = "";
@@ -63,23 +63,9 @@ function main(){
   console.log(searchAddress);
   console.log(searchTime);
   console.log(searchCategory);
-}
+  search_tmaster();
 
-  // Ticket Master AJAX
-  function accessTicketMaster(){
-    $.ajax({
-      url: "https://app.ticketmaster.com/discovery/v2/events.json?",
-      method: "GET",
-      data:{
-          apikey: "xB4pwlx2qXShKTb5vBvUcL98KBiIpsdp",
-          countryCode: "US",
-          keyword: ""
-      }
-  }).done(function (response) {
-      console.log(response);
-  });
-  }
- 
+}
 
   // Current Location Street Address AJAX from lat and lon
   function getStreet() {
@@ -99,6 +85,25 @@ function main(){
       main();
       // getRoute(searchAddress);
     });
+  }
+  function search_tmaster(){
+    accessTicketMaster();
+  }
+  // Ticket Master AJAX
+  function accessTicketMaster(){
+    $.ajax({
+      url: "https://app.ticketmaster.com/discovery/v2/events.json?",
+      method: "GET",
+      data:{
+          apikey: "xB4pwlx2qXShKTb5vBvUcL98KBiIpsdp",
+          countryCode: "US",
+          keyword: searchCategory,
+          city: searchAddress
+          // startDateTime: searchTime
+      }
+  }).done(function (response) {
+      console.log(response);
+  });
   }
   // Travel time AJAX from currentAddress
   function getRoute(searchAddress){
@@ -136,8 +141,9 @@ function main(){
       var itemText = locationsDropdown[i];
       locationMenuItem.text(itemText);
       locationMenuItem.on('click', function() {
-        searchCategory = $(this).text();
-        console.log(searchCategory);
+        searchAddress = $(this).text();
+        console.log(searchAddress);
+        search_tmaster();
       });
 
       locationMenuDOM.append(locationMenuItem);
@@ -158,6 +164,7 @@ function main(){
       timeMenuItem.on('click', function() {
         searchTime = $(this).text();
         console.log(searchTime);
+        search_tmaster();
       });
 
       timeMenuDOM.append(timeMenuItem);
@@ -169,8 +176,9 @@ function main(){
       var itemText = categoryDropdown[i];
       categoryMenuItem.text(itemText);
       categoryMenuItem.on('click', function() {
-
-        console.log($(this).text());
+        searchCategory = $(this).text();
+        console.log(searchCategory);
+        search_tmaster();
       });
 
       categoryMenuDOM.append(categoryMenuItem);
