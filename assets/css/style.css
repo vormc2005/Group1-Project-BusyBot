@@ -56,7 +56,7 @@ body {
 }  */
 
 #search-btn {
-  background-color: #F78166 !important;
+  background-color: #F78166;
   color: white;
   border: none;
   border-radius: 20px;
@@ -71,6 +71,7 @@ body {
 
 #search-btn:hover {
   cursor: pointer;
+  background-color: #ffa428;
 }
 
 .search-icon {
