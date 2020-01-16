@@ -140,11 +140,7 @@ function main(){
   makeDropdowns();
 
   // Get hours, push to timeDropdown array
-  var currentHour = moment().format('h');
-  for( var i = 0; i < 11; i++ ){
-    timeDropdown.push(parseInt(currentHour) + i);
-  }
-  console.log(timeDropdown);
+  //var hoursArr = [12,1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11];
 
   // Make dropdown elements
   function makeDropdowns() {
@@ -166,10 +162,40 @@ function main(){
       locationMenuDOM.append(locationMenuItem);
     }
     // Get hours, push to timeDropdown array
-    var currentHour = moment().format('h');
-    for( var i = 0; i < 11; i++ ){
-      timeDropdown.push(parseInt(currentHour) + i);
+    // military
+    var currentHour = moment().format('H');
+    // // console.log(currentHour);
+    // if( (parseInt(currentHour) + 12) < 24){
+    //   for( var i = 0; (parseInt(currentHour) + 12) < 23; i++ ){
+    //     currentHour = moment().add(i, 'h').format('ha');
+    //     timeDropdown.push(currentHour);
+    //   }
+    // } else if( (parseInt(currentHour) + 12) > 24 ){
+    //   for( var i = 0; (parseInt(currentHour) + 12) < 23; i++ ){
+    //     currentHour = moment().add(i, 'h').format('ha');
+    //     timeDropdown.push(currentHour);
+    //   }
+    // }
+    //NOT WORKING
+    // if the currentHour (in military time) is in the morning,
+    // add up to 12 hours
+    if( (parseInt(currentHour) + 12) < 24){
+      // while currentHour < 23, add 1
+      for( var i = 0; (parseInt(currentHour) + i) < 25; i++ ){
+        currentHour = moment().add(i, 'h').format('ha');
+        timeDropdown.push(currentHour);
+      }
+    } else if( (parseInt(currentHour) + 12) > 24 ){
+      for( var i = 0; (parseInt(currentHour) + 12) < 23; i++ ){
+        currentHour = moment().add(i, 'h').format('ha');
+        timeDropdown.push(currentHour);
+      }
     }
+    // NOT WORKING
+    // for( var i = 0; parseInt(currentHour) < 23; i++ ){
+    //   currentHour = moment().add(i, 'h').format('ha');
+    //   timeDropdown.push(currentHour);
+    // }
     console.log(timeDropdown);
 
     for( var i = 0; i < timeDropdown.length; i++ ){
