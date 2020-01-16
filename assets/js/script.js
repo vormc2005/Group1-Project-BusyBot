@@ -20,6 +20,8 @@ var searchState;
 var searchTime;
 var searchCategory;
 
+//temp
+var searchTime_24;
 
 var travelTime;
 var locationsDropdown = ['Washington', 'New York City', 'Philadelphia'];
@@ -58,7 +60,16 @@ function setAddress(){
   getStreet();
 }
 function setTime(){
-  searchTime = moment().format("LL");
+  //Collects current Time and rounds to nearest 30 min window
+  var start = moment();
+  var interval = 30 - (start.minute() % 30);
+  var day = moment(start).add(interval, "minutes");
+  //sets current time to ISO 8601 format
+  searchTime = day.format();
+  // additional time to ISO 8601 format +24 hours
+  searchTime_24 = moment(day).add(24, "hours");
+  searchTime_24 =searchTime_24.format();
+  
 }
 function setEvent(){
   searchCategory = "";
@@ -67,11 +78,6 @@ function main(){
   //inital set adress achieve from current location call on request prompt to user
   setTime();
   setEvent();
-  console.log(searchAddress);
-  console.log(searchCity);
-  console.log(searchState)
-  console.log(searchTime);
-  console.log(searchCategory);
   search_tmaster();
 
 }
@@ -88,14 +94,9 @@ function main(){
         key: apikey,
       }
     }).then(function(response) {
-      // console.log(response);
       searchAddress = response.results[0].locations[0].street;
       searchCity = response.results[0].locations[0].adminArea5;
       searchState = response.results[0].locations[0].adminArea3;
-
-      console.log(searchAddress);
-      console.log(searchCity);
-      console.log(searchState);
       main();
       // getRoute(searchAddress);
     });
@@ -114,7 +115,8 @@ function main(){
           stateCode: searchState,
           countryCode: "US",
           keyword: searchCategory,
-          // startDateTime: searchTime
+          startDateTime: searchTime,
+          endDateTime: searchTime_24
       }
   }).done(function (response) {
       console.log(response);
@@ -138,9 +140,6 @@ function main(){
 
 
   makeDropdowns();
-
-  // Get hours, push to timeDropdown array
-  //var hoursArr = [12,1,2,3,4,5,6,7,8,9,10,11,12,1,2,3,4,5,6,7,8,9,10,11];
 
   // Make dropdown elements
   function makeDropdowns() {
@@ -191,13 +190,6 @@ function main(){
         timeDropdown.push(currentHour);
       }
     }
-    // NOT WORKING
-    // for( var i = 0; parseInt(currentHour) < 23; i++ ){
-    //   currentHour = moment().add(i, 'h').format('ha');
-    //   timeDropdown.push(currentHour);
-    // }
-    console.log(timeDropdown);
-
     for( var i = 0; i < timeDropdown.length; i++ ){
       var timeMenuItem = $('<a>');
       timeMenuItem.addClass('dropdown-item');
