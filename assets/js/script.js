@@ -139,10 +139,11 @@ function main(){
       }, "json");
   }
 
+  //animate search btn makes everything slide up
   searchBtn.on('click', function() {
     // $('.header').slideUp();
     $('.header').animate({
-      'marginTop' : "-92px"
+      'marginTop' : "-120px"
     });
     searchbarDOM.animate({
       'marginTop' : "1.5em"
@@ -173,20 +174,40 @@ function main(){
     // Get hours, push to timeDropdown array
     // military
     var currentHour = moment().format('H');
+    console.log(currentHour);
     // if the currentHour (in military time) is in the morning,
     // add up to 12 hours
-    if( (parseInt(currentHour) + 12) < 24){
+    if( parseInt(currentHour) < 12){
       // while currentHour < 23, add 1
-      for( var i = 0; (parseInt(currentHour) + i) < 25; i++ ){
+      for( var i = 0; (parseInt(currentHour) + i) < 23; i++ ){
         currentHour = moment().add(i, 'h').format('ha');
+
         timeDropdown.push(currentHour);
+        console.log('am');
       }
-    } else if( (parseInt(currentHour) + 12) > 24 ){
-      for( var i = 0; (parseInt(currentHour) + 12) < 23; i++ ){
+    } else if( parseInt(currentHour) >= 12 ){
+      for( var i = 0; (parseInt(currentHour) + i) < 20; i++ ){
         currentHour = moment().add(i, 'h').format('ha');
         timeDropdown.push(currentHour);
+        console.log('pm');
       }
     }
+    
+    // if( (parseInt(currentHour) + 12) < 24){
+    //   // while currentHour < 23, add 1
+    //   for( var i = 0; (parseInt(currentHour) + i) < 23; i++ ){
+    //     currentHour = moment().add(i, 'h').format('ha');
+    //     timeDropdown.push(currentHour);
+    //     console.log(currentHour);
+    //   }
+    // } else if( (parseInt(currentHour) + 12) > 24 ){
+    //   for( var i = 0; (parseInt(currentHour) + 12) < 23; i++ ){
+    //     currentHour = moment().add(i, 'h').format('ha');
+    //     timeDropdown.push(currentHour);
+    //     console.log(currentHour);
+    //   }
+    // }
+    console.log(timeDropdown);
 
     for( var i = 0; i < timeDropdown.length; i++ ){
       var timeMenuItem = $('<a>');
@@ -194,6 +215,7 @@ function main(){
       timeMenuItem.addClass('time-item');
       var itemText = timeDropdown[i];
       timeMenuItem.text(itemText);
+      timeMenuItem.attr('iso86', moment().add(i, 'h').format());
       timeMenuItem.on('click', function() {
         searchTime = $(this).text();
         console.log(searchTime);
