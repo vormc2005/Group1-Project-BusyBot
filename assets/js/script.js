@@ -10,13 +10,19 @@ $(document).ready(function() {
 //if user can reach destination in time,
 //display event
 
+//Global lat and long retrieved from user with permission
 var lat="";
 var lon ="";
+//queries
 var searchAddress;
+var searchCity;
+var searchState;
 var searchTime;
 var searchCategory;
+
+
 var travelTime;
-var locationsDropdown = ['District of Columbia', 'New York City', 'Philadelphia'];
+var locationsDropdown = ['Washington', 'New York City', 'Philadelphia'];
 var timeDropdown = [];
 var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
 
@@ -37,7 +43,8 @@ function getCurrentLocation() {
   function denied() {
     // if permission is denied set address query to "Arlington" and call main (set time and category)
     console.log('Unable to retrieve your location');
-    searchAddress = "Arlington, VA";
+    searchCity = "Washington";
+    searchState = "DC";
     main();
   }
   if (!navigator.geolocation) {
@@ -61,6 +68,8 @@ function main(){
   setTime();
   setEvent();
   console.log(searchAddress);
+  console.log(searchCity);
+  console.log(searchState)
   console.log(searchTime);
   console.log(searchCategory);
   search_tmaster();
@@ -81,7 +90,12 @@ function main(){
     }).then(function(response) {
       // console.log(response);
       searchAddress = response.results[0].locations[0].street;
+      searchCity = response.results[0].locations[0].adminArea5;
+      searchState = response.results[0].locations[0].adminArea3;
+
       console.log(searchAddress);
+      console.log(searchCity);
+      console.log(searchState);
       main();
       // getRoute(searchAddress);
     });
@@ -96,9 +110,10 @@ function main(){
       method: "GET",
       data:{
           apikey: "xB4pwlx2qXShKTb5vBvUcL98KBiIpsdp",
+          city: searchCity,
+          stateCode: searchState,
           countryCode: "US",
           keyword: searchCategory,
-          city: searchAddress
           // startDateTime: searchTime
       }
   }).done(function (response) {
@@ -141,8 +156,10 @@ function main(){
       var itemText = locationsDropdown[i];
       locationMenuItem.text(itemText);
       locationMenuItem.on('click', function() {
-        searchAddress = $(this).text();
-        console.log(searchAddress);
+        searchCity = $(this).text();
+        console.log(searchCity);
+        // set search state to nothing for the time being
+        searchState ="";
         search_tmaster();
       });
 
