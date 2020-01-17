@@ -73,7 +73,6 @@ $(document).ready(function() {
     var day = moment(start).add(interval, "minutes");
     //sets current time to ISO 8601 format
     searchTime = day.format();
-    searchTimeFormatted = moment(searchTime).format("hh:mm:ss");
     // additional time to ISO 8601 format +24 hours
     searchTime_24 = moment(day).add(24, "hours");
     searchTime_24 = searchTime_24.format();
@@ -202,15 +201,29 @@ $(document).ready(function() {
         timeMenuItem.addClass('time-item');
         var itemText = timeDropdown[i];
         timeMenuItem.text(itemText);
+
         timeMenuItem.attr('iso86', moment().add(i, 'h').format("hh:mm:ss"));
         timeMenuItem.on('click', function() {
-          searchTime = $(this).text();
-          inputDOM.attr('placeholder', searchTime);
-          console.log(searchTime);
+          searchTime = $(this).attr("iso86");
+
+          var timeHolder = $(this).text();
+
+          
+         
+
+          
+          
+          console.log(searchTime)
+          
+          inputDOM.attr('placeholder', timeHolder);
+         
           search_tmaster();
         });
   
         timeMenuDOM.append(timeMenuItem);
+        // Grab timeMenuDom input, changint it to different time format and pasting it to a TicketMaster//
+       
+
       }
       for( var i = 0; i < categoryDropdown.length; i++ ){
         var categoryMenuItem = $('<a>');
