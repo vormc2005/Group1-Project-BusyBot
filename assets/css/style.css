@@ -15,6 +15,23 @@ h1 {
   font-size: 5em;
 }
 
+h2 {
+  font-family: 'Rubik' , sans-serif;
+  font-size: 1.25em;
+  font-weight: 500
+}
+
+h3 {
+  font-family: 'Rubik' , sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+}
+
+p {
+  font-family: 'Rubik' , sans-serif;
+  font-size: .5em;
+}
+
 .block {
   display: block;
   margin-right: auto;
