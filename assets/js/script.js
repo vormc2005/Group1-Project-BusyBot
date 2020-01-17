@@ -30,6 +30,7 @@ var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
 
 // Get DOM elements
 var searchBtn = $('#search-btn');
+var inputDOM = $('#search-input');
 var searchbarDOM = $('.search');
 var locationMenuDOM = $('.location-menu');
 var timeMenuDOM = $('.time-menu');
@@ -121,6 +122,7 @@ function main(){
       }
   }).done(function (response) {
       console.log(response);
+      renderEvents();
   });
   }
   // Travel time AJAX from currentAddress
@@ -162,6 +164,7 @@ function main(){
       locationMenuItem.text(itemText);
       locationMenuItem.on('click', function() {
         searchCity = $(this).text();
+        inputDOM.attr('placeholder', searchCity);
         console.log(searchCity);
         // set search state to nothing for the time being
         searchState ="";
@@ -196,6 +199,7 @@ function main(){
       timeMenuItem.text(itemText);
       timeMenuItem.on('click', function() {
         searchTime = $(this).text();
+        inputDOM.attr('placeholder', searchTime);
         console.log(searchTime);
         search_tmaster();
       });
@@ -210,6 +214,7 @@ function main(){
       categoryMenuItem.text(itemText);
       categoryMenuItem.on('click', function() {
         searchCategory = $(this).text();
+        inputDOM.attr('placeholder', searchCategory);
         console.log(searchCategory);
         search_tmaster();
       });
@@ -218,4 +223,6 @@ function main(){
     }
   }
   getCurrentLocation();
+
+  //render events
 })//document ready end point 
