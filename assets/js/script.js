@@ -90,7 +90,6 @@ $(document).ready(function () {
     //inital set adress achieve from current location call on request prompt to user
     setTime();
     setEvent();
-    search_tmaster();
 
   }
 
@@ -230,9 +229,9 @@ $(document).ready(function () {
         var itemText = timeDropdown[i];
         timeMenuItem.text(itemText);
 
-        timeMenuItem.attr('iso86', moment().add(i, 'h').format("hh:mm:ss"));
+        timeMenuItem.attr('iso86', moment().add(i, 'h').format());
         timeMenuItem.on('click', function() {
-          searchTime = $(this).attr("iso86");
+          searchTime = $(this).attr("iso86") ;
           var timeHolder = $(this).text();
           inputDOM.attr('placeholder', timeHolder);
           search_tmaster();
