@@ -19,12 +19,14 @@ $(document).ready(function() {
   var searchCity;
   var searchState;
   var searchTime;
+  var searchTimeFormatted;
   var searchCategory;
   
   //temp
   var searchTime_24;
   
-  var travelTime;
+  var travelTime = 725;
+  var timeMenuItem;
   var locationsDropdown = ['Washington', 'New York City', 'Philadelphia'];
   var timeDropdown = [];
   var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
@@ -37,6 +39,7 @@ $(document).ready(function() {
   var timeMenuDOM = $('.time-menu');
   var categoryMenuDOM = $('.category-menu');
   var eventsListDOM = $('.events-list');
+
   
   //HTML5 retrieve permission from user to get current location (lat and long)
   function getCurrentLocation() {
@@ -70,9 +73,10 @@ $(document).ready(function() {
     var day = moment(start).add(interval, "minutes");
     //sets current time to ISO 8601 format
     searchTime = day.format();
+    searchTimeFormatted = moment(searchTime).format("hh:mm:ss");
     // additional time to ISO 8601 format +24 hours
     searchTime_24 = moment(day).add(24, "hours");
-    searchTime_24 =searchTime_24.format();
+    searchTime_24 = searchTime_24.format();
     
   }
   function setEvent(){
@@ -137,9 +141,6 @@ $(document).ready(function() {
         function (response) {
           console.log(response);
           travelTime = response.time[1];
-          // Round travelTime into nearest minute
-          var travelMins = Math.round(travelTime/60);
-          console.log(travelMins);
         }, "json");
     }
   
@@ -152,6 +153,7 @@ $(document).ready(function() {
       searchbarDOM.animate({
         'marginTop' : "1.5em"
       }, "slow");
+      // search_tmaster();
     });
   
     makeDropdowns();
@@ -179,32 +181,28 @@ $(document).ready(function() {
       // Get hours, push to timeDropdown array
       // military
       var currentHour = moment().format('H');
-      console.log(currentHour);
       // if the currentHour (in military time) is in the morning,
       // add up to 12 hours
       if( parseInt(currentHour) < 12){
         // while currentHour < 23, add 1
         for( var i = 0; (parseInt(currentHour) + i) < 23; i++ ){
           currentHour = moment().add(i, 'h').format('ha');
-  
           timeDropdown.push(currentHour);
-          console.log('am');
         }
       } else if( parseInt(currentHour) >= 12 ){
         for( var i = 0; (parseInt(currentHour) + i) < 20; i++ ){
           currentHour = moment().add(i, 'h').format('ha');
           timeDropdown.push(currentHour);
-          console.log('pm');
         }
       }
   
       for( var i = 0; i < timeDropdown.length; i++ ){
-        var timeMenuItem = $('<a>');
+        timeMenuItem = $('<a>');
         timeMenuItem.addClass('dropdown-item');
         timeMenuItem.addClass('time-item');
         var itemText = timeDropdown[i];
         timeMenuItem.text(itemText);
-        timeMenuItem.attr('iso86', moment().add(i, 'h').format());
+        timeMenuItem.attr('iso86', moment().add(i, 'h').format("hh:mm:ss"));
         timeMenuItem.on('click', function() {
           searchTime = $(this).text();
           inputDOM.attr('placeholder', searchTime);
@@ -232,41 +230,53 @@ $(document).ready(function() {
     }
     getCurrentLocation();
 
+  //check to see if searchTime plus travelTime is before start of event
+  //push events that fit criteria into viableEvents
   function checkEvents(response){
+    var totalTime = moment(searchTime).add(travelTime,'s').format();
     for( var i = 0; i < response._embedded.events.length; i++ ){
-      if((searchTime_24 + travelTime) < response._embedded.events[i].dates.start.dateTime) {
+      if(totalTime < response._embedded.events[i].dates.start.localTime) {
         var event = response._embedded.events[i];
         viableEvents.push(event);
         renderEvents();
       }
     }
+    console.log(viableEvents);
   }
 
   //render events
   function renderEvents() {
-    console.log(viableEvents);
+    var eventNameDOM = $('<h2>');
+    var eventImageDOM = $('<img>');
+    var eventLocationDOM = $('<h3>');
+    var eventTimeDOM = $('<p>');
+    var eventPriceDOM = $('<p>');
+    var eventURL = $('<p>');
     //make DOM elements for each array item
     for( var i = 0; i < viableEvents.length; i++ ){
-      console.log("it's happening");
-      var eventNameDOM = $('<h2>');
-      var eventImageDOM = $('<img>');
-      var eventLocationDOM = $('<h3>');
-      var eventTimeDOM = $('<p>');
-      var eventPriceDOM = $('<p>');
-      var eventURL;
 
       //fill with info
       eventNameDOM.text(viableEvents[i].name);
-      eventImageDOM.attr('src', viableEvents[i].images[0].url);
-      eventLocationDOM.text(viableEvents[i].locate);
+      // eventImageDOM.attr('src', viableEvents[i].images[0].url);
+      eventLocationDOM.text(viableEvents[i]._embedded.venues[0].name);
       eventTimeDOM.text(viableEvents[i].dates.start.dateTime);
-      eventPriceDOM.text(viableEvents[i].price_range);
+      // eventPriceDOM.text((viableEvents[i].priceRanges[0].min) + "-" + (viableEvents[i].priceRanges[0].max));
       eventURL.text(viableEvents[i].url);
+
+      //console log
+      // console.log(viableEvents[i].name);
+      // console.log(viableEvents[i]._embedded.venues[0].name);
+      // console.log(viableEvents[i].dates.start.dateTime);
+      // console.log((viableEvents[i].priceRanges[0].min) + "-" + (viableEvents[i].priceRanges[0].max));
+      // console.log(viableEvents[i].url);
+
+      console.log[i];
 
       //append to eventsListDOM
       eventsListDOM.append(eventNameDOM);
       eventsListDOM.append(eventImageDOM);
       eventsListDOM.append(eventLocationDOM);
+      eventsListDOM.append(eventTimeDOM);
       eventsListDOM.append(eventPriceDOM);
       eventsListDOM.append(eventURL);
     }
