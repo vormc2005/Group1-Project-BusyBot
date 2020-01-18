@@ -1,14 +1,6 @@
 $(document).ready(function () {
-  //get user's current location
-  //pass current location into map query
-
-  //pass location and current time into ticketmaster query
-  //get array of objects of events
-
-  //check location of events
-  //check current location
-  //if user can reach destination in time,
-  //display event
+  //TODO create error handling for if no events are returned
+  //TODO allow multiple queries
   var viableEvents = [];
 
   //Global lat and long retrieved from user with permission
@@ -133,7 +125,7 @@ $(document).ready(function () {
         endDateTime: searchTime_24
       }
     }).done(function (response) {
-      console.log(response);
+      //console.log(response);
       checkEvents(response);
 
     });
@@ -180,13 +172,13 @@ $(document).ready(function () {
 
   //animate search btn makes everything slide up
   searchBtn.on('click', function () {
-    // $('.header').slideUp();
     $('.header').animate({
       'marginTop': "-120px"
     });
     searchbarDOM.animate({
       'marginTop': "1.5em"
     }, "slow");
+    search_tmaster();
   });
 
   // Make dropdown elements
@@ -207,7 +199,7 @@ $(document).ready(function () {
         console.log(startPoint);
         // set search state to nothing for the time being
         searchState = "";
-        search_tmaster();
+        //search_tmaster();
       });
       locationMenuDOM.append(locationMenuItem);
     }
@@ -242,7 +234,7 @@ $(document).ready(function () {
           var timeHolder = $(this).text();
           inputDOM.attr('placeholder', timeHolder);
           console.log($(this).attr("iso86"));
-          search_tmaster();
+          //search_tmaster();
         });
         timeMenuDOM.append(timeMenuItem);
         // Grab timeMenuDom input, changint it to different time format and pasting it to a TicketMaster//
@@ -257,7 +249,7 @@ $(document).ready(function () {
         searchCategory = $(this).text();
         inputDOM.attr('placeholder', searchCategory);
         console.log(searchCategory);
-        search_tmaster();
+        //search_tmaster();
       });
       
       categoryMenuDOM.append(categoryMenuItem);
@@ -266,39 +258,49 @@ $(document).ready(function () {
 
   //render events
   function renderEvents() {
+    var eventRowDOM = $('<div>');
+    eventRowDOM.addClass('animated row event-row col-12 fadeInUp');
+    var eventInfoDivDOM = $('<div>');
     var eventNameDOM = $('<h2>');
     var eventImageDOM = $('<img>');
+    var eventImageDivDOM = $('<div>');
     var eventLocationDOM = $('<h3>');
     var eventTimeDOM = $('<p>');
     var eventPriceDOM = $('<p>');
-    var eventURL = $('<p>');
+    var eventURL;
     //make DOM elements for each array item
     for (var i = 0; i < viableEvents.length; i++) {
 
       //fill with info
       eventNameDOM.text(viableEvents[i].name);
-      // eventImageDOM.attr('src', viableEvents[i].images[0].url);
+      eventImageDivDOM.addClass('event-image-div col-5');
+      eventInfoDivDOM.addClass('event-info-div col-7');
+      eventImageDOM.attr('src', viableEvents[i].images[3].url);
+      eventImageDOM.addClass('event-image');
       eventLocationDOM.text(viableEvents[i]._embedded.venues[0].name);
-      eventTimeDOM.text(viableEvents[i].dates.start.dateTime);
-      // eventPriceDOM.text((viableEvents[i].priceRanges[0].min) + "-" + (viableEvents[i].priceRanges[0].max));
-      eventURL.text(viableEvents[i].url);
-
-      //console log
-      // console.log(viableEvents[i].name);
-      // console.log(viableEvents[i]._embedded.venues[0].name);
-      // console.log(viableEvents[i].dates.start.dateTime);
-      // console.log((viableEvents[i].priceRanges[0].min) + "-" + (viableEvents[i].priceRanges[0].max));
-      // console.log(viableEvents[i].url);
+      eventTimeDOM.text(moment(viableEvents[i].dates.start.dateTime).format('ha'));
+      //eventPriceDOM.text("$" + (viableEvents[i].priceRanges[0].min));
+      // eventPriceDOM.text("$" + (viableEvents[i].priceRanges[0].min) + " -$" + (viableEvents[i].priceRanges[0].max));
+      eventURL = viableEvents[i].url;
 
       console.log[i];
 
       //append to eventsListDOM
-      eventsListDOM.append(eventNameDOM);
-      eventsListDOM.append(eventImageDOM);
-      eventsListDOM.append(eventLocationDOM);
-      eventsListDOM.append(eventTimeDOM);
-      eventsListDOM.append(eventPriceDOM);
-      eventsListDOM.append(eventURL);
+      eventImageDivDOM.append(eventImageDOM);
+      eventRowDOM.append(eventImageDivDOM);
+      eventRowDOM.append(eventInfoDivDOM);
+
+      eventInfoDivDOM.append(eventNameDOM);
+      eventInfoDivDOM.append(eventLocationDOM);
+      eventInfoDivDOM.append(eventTimeDOM);
+      eventInfoDivDOM.append(eventPriceDOM);
+      // eventInfoDivDOM.append(eventURL);
+
+      eventsListDOM.append(eventRowDOM);
+
+      eventRowDOM.on('click', function() {
+        window.open(eventURL, '_blank');
+      });
     }
   }
 
