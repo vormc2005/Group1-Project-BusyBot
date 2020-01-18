@@ -139,6 +139,7 @@ $(document).ready(function () {
     });
   }
   function checkEvents(response) {
+    eventsListDOM.empty();
     viableEvents = [];
     for (var i = 0; i < response._embedded.events.length; i++) {
       var eventTime = response._embedded.events[i].dates.start.dateTime;
@@ -235,11 +236,12 @@ $(document).ready(function () {
         var itemText = timeDropdown[i];
         timeMenuItem.text(itemText);
 
-        timeMenuItem.attr('iso86', moment().add(i, 'h').format("hh:mm:ss"));
+        timeMenuItem.attr('iso86', moment().add(i, 'h').format());
         timeMenuItem.on('click', function() {
           searchTime = $(this).attr("iso86");
           var timeHolder = $(this).text();
           inputDOM.attr('placeholder', timeHolder);
+          console.log($(this).attr("iso86"));
           search_tmaster();
         });
         timeMenuDOM.append(timeMenuItem);
