@@ -125,9 +125,17 @@ $(document).ready(function () {
         endDateTime: searchTime_24
       }
     }).done(function (response) {
-      //console.log(response);
-      checkEvents(response);
-
+      console.log(response);
+      if( response._embedded == undefined ){
+        var eventRowDOM = $('<div>');
+        eventRowDOM.addClass('animated row event-row col-12 fadeInUp');
+        var emptyEventDOM = $('h2');
+        emptyEventDOM.text("There are no events that meet your terms. Please refresh the page and try again.");
+        eventRowDOM.append(emptyEventDOM);
+        eventsListDOM.append(eventRowDOM);
+      } else {
+        checkEvents(response);
+      }
     });
   }
   function checkEvents(response) {
@@ -301,6 +309,9 @@ $(document).ready(function () {
       eventRowDOM.on('click', function() {
         window.open(eventURL, '_blank');
       });
+      // eventRowDOM.on('mouseover', function() {
+      //   eventRowDOM.addClass('animated pulse');
+      // });
     }
   }
 

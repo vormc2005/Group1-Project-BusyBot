@@ -20,6 +20,7 @@ h2 {
   /* font-size: 1.25em; */
   font-size: 2em;
   font-weight: 400;
+  color: #303030;
 }
 
 h3 {
@@ -27,12 +28,14 @@ h3 {
   /* font-size: 1em; */
   font-size: 1.5em;
   font-weight: 400;
+  color: #606060;
 }
 
 p {
   font-family: 'Rubik' , sans-serif;
   /* font-size: .5em; */
-  font-size: 1em;
+  font-size: 1.25em;
+  color: #606060;
 }
 
 .block {
@@ -104,13 +107,13 @@ p {
 
 @media (min-width: 500px) {
   .options {
-    margin: -1em auto 5em auto;
+    margin: -1em auto 11em auto;
     width: 75%;
   }
 }
 @media (min-width: 992px) {
   .options {
-    margin: -1em auto 5em auto;
+    margin: -1em auto 11em auto;
     width: 50%;
   }
 }
@@ -132,6 +135,7 @@ p {
   font-family: 'Rubik', sans-serif;
   font-weight: 500;
   font-size: 1em;
+  z-index: 1 !important;
 }
 
 @media (min-width: 500px) {
@@ -150,9 +154,19 @@ p {
   display: none;
 }
 
-.events-list {
-  width: 80%;
-  margin: 0px auto 5em auto;
+@media (min-width: 500px) {
+  .events-list {
+    width: 100%;
+    margin: 0px auto 5em auto;
+    z-index: 0;
+  }
+}
+@media (min-width: 992px) {
+  .events-list {
+    width: 80%;
+    margin: 0px auto 5em auto;
+    z-index: 0;
+  }
 }
 
 .event-row {
@@ -161,6 +175,11 @@ p {
   padding: 20px;
   margin: 10px auto 0px auto;
   cursor: pointer;
+  z-index: 0;
+}
+
+.event-row:hover {
+  margin-left: 10px;
 }
 
 .event-image-div {
@@ -168,6 +187,7 @@ p {
   width: 200px;
   height: 200px; 
   overflow: hidden;
+  border-radius: 5px;
 }
 
 .event-image {
@@ -183,4 +203,5 @@ p {
 
 .event-info-div {
   position: relative;
+  margin-top: 20px;
 }
