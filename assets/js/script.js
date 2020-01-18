@@ -139,22 +139,27 @@ $(document).ready(function () {
     });
   }
   function checkEvents(response) {
+    viableEvents = [];
     for (var i = 0; i < response._embedded.events.length; i++) {
       var eventTime = response._embedded.events[i].dates.start.dateTime;
       var eventAddress = response._embedded.events[i]._embedded.venues[0].name + " " +
         response._embedded.events[i]._embedded.venues[0].address.line1 + ", " +
         response._embedded.events[i]._embedded.venues[0].city.name + ", " +
         response._embedded.events[i]._embedded.venues[0].state.stateCode;
-        console.log(startPoint);
-        console.log(eventAddress);
-      getRoute(startPoint, eventAddress);
+        //console.log(startPoint);
+        //console.log(eventAddress);
+      getRoute(startPoint, eventAddress);  
 
-      // if((searchTime_24 + travelTime) < response._embedded.events[i].dates.start.dateTime) {
-      //   var event = response._embedded.events[i];
-      //   viableEvents.push(event);
-      //   renderEvents();
-      // }
+      //check to see if searchTime plus travelTime is before start of event
+      //push events that fit criteria into viableEvents
+      var totalTime = moment(searchTime).add(travelTime,'s').format();
+      if(totalTime < response._embedded.events[i].dates.start.localTime) {
+        var event = response._embedded.events[i];
+        viableEvents.push(event);
+        renderEvents();
+      }
     }
+    console.log(viableEvents);
   }
   // Travel time AJAX from currentAddress
   function getRoute(start, end) {
@@ -164,11 +169,11 @@ $(document).ready(function () {
         'options': { 'allToAll': false }
       }),
       function (response) {
-        console.log(response);
+        //console.log(response);
         travelTime = response.time[1];
         // Round travelTime into nearest minute
         var travelMins = Math.round(travelTime / 60);
-        console.log(travelMins);
+        //console.log(travelMins);
       }, "json");
   }
 
@@ -255,19 +260,6 @@ $(document).ready(function () {
       
       categoryMenuDOM.append(categoryMenuItem);
     }
-  }
-  //check to see if searchTime plus travelTime is before start of event
-  //push events that fit criteria into viableEvents
-  function checkEvents(response){
-    var totalTime = moment(searchTime).add(travelTime,'s').format();
-    for( var i = 0; i < response._embedded.events.length; i++ ){
-      if(totalTime < response._embedded.events[i].dates.start.localTime) {
-        var event = response._embedded.events[i];
-        viableEvents.push(event);
-        renderEvents();
-      }
-    }
-    console.log(viableEvents);
   }
 
   //render events
