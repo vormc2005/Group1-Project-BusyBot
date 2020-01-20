@@ -1,32 +1,37 @@
 $(document).ready(function () {
   //TODO create error handling for if no events are returned
   //TODO allow multiple queries
+
+ //Empty Event Holder that user can attened
   var viableEvents = [];
 
-  //Global lat and long retrieved from user with permission
+//Map Quest Location Quiries retrieved from user with permission [ getCurrentLocation() ]
   var lat = "";
   var lon = "";
-  //queries
+//Ticket Master Quiries [ Current Location || Default ]
   var searchAddress;
   var searchCity;
   var searchState;
-  var searchTime;
   var searchCategory;
 
-  //mapQuest route queries
-  var startPoint;
-  //temp
-  var searchTime_24;
+  var searchTime;
+  var searchTime_24; //search time +24 hours
 
-  var travelTime;
+
+ //Map Quest Route Matrix Quieries
+  var startPoint; // searchAddress + searchCity, + Search State
+
+  //Map Quest Route Matrix Return Data
+  var travelTime; //strat point --> event address
   var timeMenuItem;
   
+  //Hardcode List of popular locations and events [ Ticket Master Quieries ]
   var locationsDropdown = ['Washington', 'New York City', 'Philadelphia'];
   var locationAttributes = ["DC", "NY", "PA"];
   var timeDropdown = [];
   var categoryDropdown = ['Sports', 'Music', 'Theater'];
 
-  // Get DOM elements
+  // Pre-Built DOM Elements
   var searchBtn = $('#search-btn');
   var inputDOM = $('#search-input');
   var searchbarDOM = $('.search');
@@ -35,26 +40,28 @@ $(document).ready(function () {
   var categoryMenuDOM = $('.category-menu');
   var eventsListDOM = $('.events-list');
 
+
   var locationBtn = $('.location-btn');
   var timeBtn = $('.time-btn');
   var categoryBtn = $('.category-btn');
-
-  //HTML5 retrieve permission from user to get current location (lat and long)
+  
+  //HTML5 retrieve permission from user to get current location (latitude and longitude)  
   function getCurrentLocation() {
     
     function success(position) {
-      //if permission granted set call setAddress to convert lat and long to street adresss
+      //if permission granted set call [setAddress()] to convert lat and long to street adresss
       lat = position.coords.latitude;
       lon = position.coords.longitude;
       setAddress();
     }
     function denied() {
-      // if permission is denied set address query to "Arlington" and call main (set time and category)
+      // if permission is denied set Ticket Master queries to defualt to "Washington"(city) and DC (state)
       console.log('Unable to retrieve your location');
       searchAddress="";
       searchCity = "Washington";
       searchState = "DC";
       startPoint = searchCity + ", " + searchState;
+      // Call to main to set defualts other than location [setTime() default && setCategory() defualt]
       main();
     }
     if (!navigator.geolocation) {
@@ -65,10 +72,11 @@ $(document).ready(function () {
     }
   }
   function setAddress() {
-    getStreet();
+    getStreet(); //Map Quest Location API
   }
   function setTime() {
-    //Collects current Time and rounds to nearest 30 min window
+  //Set Default 'searchTime' to current Time and rounds to nearest 30 min window if we recive no user input upon initial quirey.
+  //ISO 8601 required format to pass date strings into Ticket Master API
     var start = moment();
     var interval = 30 - (start.minute() % 30);
     var day = moment(start).add(interval, "minutes");
@@ -79,17 +87,17 @@ $(document).ready(function () {
     searchTime_24 = searchTime_24.format();
   }
   function setEvent() {
-    searchCategory = "";
+    searchCategory = "";//Defualt == Empty to return events of all type
   }
   function main() {
-    //inital set adress achieve from current location call on request prompt to user
+    //Initial call to render prebuilt DOM and set inital search queries to defualt 
+    //Nested call in respone to location servies permission
     setTime();
     setEvent();
-    search_tmaster();
 
   }
 
-  // Current Location Street Address AJAX from lat and lon
+  // Current Location Map Quest API: Street Address obtained form AJAX call on lat and lon positions
   function getStreet() {
     var apikey = '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
     $.ajax({
@@ -101,13 +109,13 @@ $(document).ready(function () {
         key: apikey,
       }
     }).then(function (response) {
+      //On succesful of good response: set Ticket Master Quiries off of retured info
       searchAddress = response.results[0].locations[0].street;
       searchCity = response.results[0].locations[0].adminArea5;
       searchState = response.results[0].locations[0].adminArea3;
       startPoint = searchAddress + ", " + searchCity + ", " + searchState;
 
-      main();
-      // getRoute(searchAddress);
+      main(); //call to main to get other defualt values not obtained through location servies permissions
     });
   }
   function search_tmaster() {
@@ -115,6 +123,7 @@ $(document).ready(function () {
   }
   // Ticket Master AJAX
   function accessTicketMaster() {
+    //Search for ticketed events based on: Location, Category, and Date(time)
     $.ajax({
       url: "https://app.ticketmaster.com/discovery/v2/events.json?",
       method: "GET",
@@ -122,26 +131,29 @@ $(document).ready(function () {
         apikey: "xB4pwlx2qXShKTb5vBvUcL98KBiIpsdp",
         city: searchCity,
         stateCode: searchState,
-        countryCode: "US",
+        countryCode: "US", //Hardcoded to US cities; Can be altered in the future based on LAT and LON for scalability
         keyword: searchCategory,
         startDateTime: searchTime,
         endDateTime: searchTime_24
       }
     }).done(function (response) {
-      console.log(response);
-      if( response._embedded == undefined ){
+     // Upon bad response rerender page to inform user to try new search paramaters
+      console.log(response.page.totalElements);
+      if( response.page.totalElements === 0 ){
         var eventRowDOM = $('<div>');
         eventRowDOM.addClass('animated row event-row col-12 fadeInUp');
-        var emptyEventDOM = $('h2');
+        var emptyEventDOM = $('<h4>');
         emptyEventDOM.text("There are no events that meet your terms. Please refresh the page and try again.");
         eventRowDOM.append(emptyEventDOM);
         eventsListDOM.append(eventRowDOM);
       } else {
+       // Upon good response, compare quiried event time (current time) against event start times and calculate travle time
         checkEvents(response);
       }
     });
   }
   function checkEvents(response) {
+    // loop through Ticket Master response, gather venue location details and empty current list of events
     eventsListDOM.empty();
     viableEvents = [];
     for (var i = 0; i < response._embedded.events.length; i++) {
@@ -150,13 +162,13 @@ $(document).ready(function () {
         response._embedded.events[i]._embedded.venues[0].address.line1 + ", " +
         response._embedded.events[i]._embedded.venues[0].city.name + ", " +
         response._embedded.events[i]._embedded.venues[0].state.stateCode;
-        //console.log(startPoint);
-        //console.log(eventAddress);
+        //Map Quest Route Matirx [getRoute()] calculates travel time and distace between start address and current event addresss
       getRoute(startPoint, eventAddress);  
 
-      //check to see if searchTime plus travelTime is before start of event
+      // travelTime calculated to determin if user can travel to event address by event start time (based on current/quiried location)
       //push events that fit criteria into viableEvents
       var totalTime = moment(searchTime).add(travelTime,'s').format();
+      //if tiem of arrivale is< event start time, append current event to viable events array for display
       if(totalTime < response._embedded.events[i].dates.start.localTime) {
         var event = response._embedded.events[i];
         viableEvents.push(event);
@@ -165,7 +177,7 @@ $(document).ready(function () {
     }
     console.log(viableEvents);
   }
-  // Travel time AJAX from currentAddress
+  // Travel time AJAX MAPQuest API: currentAddress/qurried address to event address
   function getRoute(start, end) {
     $.post("http://www.mapquestapi.com/directions/v2/routematrix?key=XBEFbd4lAqBbeNeE8QyUcxIbYlnlARLz",
       "json=" + JSON.stringify({
@@ -217,17 +229,13 @@ $(document).ready(function () {
         startPoint = searchCity+", "+searchState;
         inputDOM.attr('placeholder', startPoint);
         console.log(startPoint);
-        // set search state to nothing for the time being
-        searchState = "";
         //search_tmaster();
       });
       locationMenuDOM.append(locationMenuItem);
     }
     // Make dropdown elements
-      // Get hours, push to timeDropdown array
-      // military
-      var currentHour = moment().format('H');
-      // if the currentHour (in military time) is in the morning,
+      // Add add current hour + 11 proceeding hours to timeDropdown array for user selection
+      var currentHour = moment().format('H'); //utilizing ilitary time to achieve AM and PM 
       // add up to 12 hours
       if( parseInt(currentHour) < 12){
         // while currentHour < 23, add 1
@@ -250,7 +258,7 @@ $(document).ready(function () {
 
         timeMenuItem.attr('iso86', moment().add(i, 'h').format());
         timeMenuItem.on('click', function() {
-          searchTime = $(this).attr("iso86");
+          searchTime = $(this).attr("iso86") ;
           var timeHolder = $(this).text();
           inputDOM.attr('placeholder', timeHolder);
           console.log($(this).attr("iso86"));
@@ -280,7 +288,7 @@ $(document).ready(function () {
   locationBtn.on('click', function() {
     inputDOM.attr('placeholder', 'City Name, State Code');
   });
-
+  
   //render events
   function renderEvents() {
     var eventRowDOM = $('<div>');
@@ -331,6 +339,5 @@ $(document).ready(function () {
       // });
     }
   }
-
   getCurrentLocation();
 })//document ready end point 
