@@ -118,6 +118,11 @@ p {
   }
 }
 
+.time-menu {
+  height: 128px;
+  overflow: scroll;
+}
+
 .menu {
   margin: auto;
   width: 33%;
