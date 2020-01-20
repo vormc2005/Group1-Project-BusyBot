@@ -17,7 +17,6 @@ $(document).ready(function () {
   var searchTime;
   var searchTime_24; //search time +24 hours
 
-
  //Map Quest Route Matrix Quieries
   var startPoint; // searchAddress + searchCity, + Search State
 
@@ -40,10 +39,8 @@ $(document).ready(function () {
   var categoryMenuDOM = $('.category-menu');
   var eventsListDOM = $('.events-list');
 
-
-  var locationBtn = $('.location-btn');
-  var timeBtn = $('.time-btn');
-  var categoryBtn = $('.category-btn');
+  var locationInputDOM = $('<input>');
+  var categoryInputDOM = $('<input>');
   
   //HTML5 retrieve permission from user to get current location (latitude and longitude)  
   function getCurrentLocation() {
@@ -151,6 +148,8 @@ $(document).ready(function () {
         checkEvents(response);
       }
     });
+    locationInputDOM.val("");
+    categoryInputDOM.val("");
   }
   function checkEvents(response) {
     // loop through Ticket Master response, gather venue location details and empty current list of events
@@ -201,15 +200,21 @@ $(document).ready(function () {
     searchbarDOM.animate({
       'marginTop': "1.5em"
     }, "slow");
-    if( inputDOM.val().indexOf(",") > -1 ) {
-      var cityInputArr = inputDOM.val().split(',');
+    if( locationInputDOM.val() !== "" && locationInputDOM.val().indexOf(",") > -1 ) {
+      var cityInputArr = locationInputDOM.val().split(',');
       searchCity = cityInputArr[0];
       searchState = cityInputArr[1];
       startPoint = searchCity+", "+searchState;
-        inputDOM.attr('placeholder', startPoint);
+  
+      inputDOM.attr('placeholder', startPoint);   
       console.log(startPoint);
-      search_tmaster();
-    } 
+      
+    } else if( categoryInputDOM.val() !== "" ) {
+      searchCategory = categoryInputDOM.val();
+
+      inputDOM.attr('placeholder', searchCategory);   
+      
+    }
     search_tmaster();
   });
 
@@ -233,6 +238,25 @@ $(document).ready(function () {
       });
       locationMenuDOM.append(locationMenuItem);
     }
+
+    //make input field for location
+    locationInputDOM.attr('type', 'text');
+    locationInputDOM.attr('placeholder' , 'City Name, State Code');
+
+    $(document).on('keypress',function(e) {
+      if(e.which == 13) {
+        inputDOM.attr('placeholder', "");
+        if( locationInputDOM.val() !== "" && locationInputDOM.val().indexOf(",") > -1 ) {
+          inputDOM.attr('placeholder', locationInputDOM.val());   
+        } else if( categoryInputDOM.val() !== "" ) {
+          getStreet();
+          inputDOM.attr('placeholder', categoryInputDOM.val()); 
+        }
+      }
+    });
+      
+
+    locationMenuDOM.append(locationInputDOM);
     // Make dropdown elements
       // Add add current hour + 11 proceeding hours to timeDropdown array for user selection
       var currentHour = moment().format('H'); //utilizing ilitary time to achieve AM and PM 
@@ -282,12 +306,11 @@ $(document).ready(function () {
       
       categoryMenuDOM.append(categoryMenuItem);
     }
+    //make input field for location
+    categoryInputDOM.attr('type', 'text');
+    categoryInputDOM.attr('placeholder' , 'Enter a keyword');
+    categoryMenuDOM.append(categoryInputDOM);
   }
-
-  //option button click allows user to fill search field with their own city and state code
-  locationBtn.on('click', function() {
-    inputDOM.attr('placeholder', 'City Name, State Code');
-  });
   
   //render events
   function renderEvents() {
