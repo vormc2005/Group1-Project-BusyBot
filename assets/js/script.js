@@ -53,7 +53,7 @@ $(document).ready(function () {
     }
     function denied() {
       // if permission is denied set Ticket Master queries to defualt to "Washington"(city) and DC (state)
-      console.log('Unable to retrieve your location');
+      // console.log('Unable to retrieve your location');
       searchAddress="";
       searchCity = "Washington";
       searchState = "DC";
@@ -62,9 +62,9 @@ $(document).ready(function () {
       main();
     }
     if (!navigator.geolocation) {
-      console.log('Geolocation is not supported by your browser');
+      // console.log('Geolocation is not supported by your browser');
     } else {
-      console.log('Locating…');
+      // console.log('Locating…');
       navigator.geolocation.getCurrentPosition(success, denied);
     }
   }
@@ -135,7 +135,8 @@ $(document).ready(function () {
       }
     }).done(function (response) {
      // Upon bad response rerender page to inform user to try new search paramaters
-      console.log(response.page.totalElements);
+      // console.log(response.page.totalElements);
+      console.log(response);
       if( response.page.totalElements === 0 ){
         var eventRowDOM = $('<div>');
         eventRowDOM.addClass('animated row event-row col-12 fadeInUp');
@@ -145,6 +146,7 @@ $(document).ready(function () {
         eventsListDOM.append(eventRowDOM);
       } else {
        // Upon good response, compare quiried event time (current time) against event start times and calculate travle time
+       console.log("City: "+searchCity+". Category: "+searchCategory+". Time: "+searchTime)
         checkEvents(response);
       }
     });
@@ -156,39 +158,35 @@ $(document).ready(function () {
     eventsListDOM.empty();
     viableEvents = [];
     for (var i = 0; i < response._embedded.events.length; i++) {
-      var eventTime = response._embedded.events[i].dates.start.dateTime;
+      var event = response._embedded.events[i]; //current event
+      var eventTime = response._embedded.events[i].dates.start.localDate+"T"+response._embedded.events[i].dates.start.localTime+"Z" ; //event dateTime
       var eventAddress = response._embedded.events[i]._embedded.venues[0].name + " " +
         response._embedded.events[i]._embedded.venues[0].address.line1 + ", " +
         response._embedded.events[i]._embedded.venues[0].city.name + ", " +
         response._embedded.events[i]._embedded.venues[0].state.stateCode;
-        //Map Quest Route Matirx [getRoute()] calculates travel time and distace between start address and current event addresss
-      getRoute(startPoint, eventAddress);  
-
-      // travelTime calculated to determin if user can travel to event address by event start time (based on current/quiried location)
-      //push events that fit criteria into viableEvents
-      var totalTime = moment(searchTime).add(travelTime,'s').format();
-      //if tiem of arrivale is< event start time, append current event to viable events array for display
-      if(totalTime < response._embedded.events[i].dates.start.localTime) {
-        var event = response._embedded.events[i];
-        viableEvents.push(event);
-        renderEvents();
-      }
+      //Map Quest Route Matirx [getRoute()] calculates travel time and distace between start address and current event addresss
+      getRoute(startPoint, eventAddress, event, eventTime, viableEvents); 
     }
-    console.log(viableEvents);
   }
   // Travel time AJAX MAPQuest API: currentAddress/qurried address to event address
-  function getRoute(start, end) {
+  function getRoute(start, end, event, eventTime, viableEvents) {
     $.post("http://www.mapquestapi.com/directions/v2/routematrix?key=XBEFbd4lAqBbeNeE8QyUcxIbYlnlARLz",
       "json=" + JSON.stringify({
         'locations': [start, end],
         'options': { 'allToAll': false }
       }),
       function (response) {
-        //console.log(response);
+        console.log(response);
         travelTime = response.time[1];
-        // Round travelTime into nearest minute
-        var travelMins = Math.round(travelTime / 60);
-        //console.log(travelMins);
+        // travelTime calculated to determin if user can travel to event address by event start time (based on current/quiried location)
+        //if time of arrivale is < event start time, append current event to viable events array for display
+        var t1 = new Date(searchTime);
+        var t2 = new Date(eventTime);
+        var dif = (t1 - t2)/1000; // how much time is betwwen qurried time and event start in seconds
+        if(dif>travelTime) {
+          viableEvents.push(event); // current event from parent function checkEvents()
+        }
+        renderEvents();
       }, "json");
   }
 
@@ -233,7 +231,7 @@ $(document).ready(function () {
         searchState = $(this).attr("state-code");
         startPoint = searchCity+", "+searchState;
         inputDOM.attr('placeholder', startPoint);
-        console.log(startPoint);
+        // console.log(startPoint);
         //search_tmaster();
       });
       locationMenuDOM.append(locationMenuItem);
@@ -285,7 +283,7 @@ $(document).ready(function () {
           searchTime = $(this).attr("iso86") ;
           var timeHolder = $(this).text();
           inputDOM.attr('placeholder', timeHolder);
-          console.log($(this).attr("iso86"));
+          // console.log($(this).attr("iso86"));
           //search_tmaster();
         });
         timeMenuDOM.append(timeMenuItem);
@@ -300,7 +298,7 @@ $(document).ready(function () {
       categoryMenuItem.on('click', function () {
         searchCategory = $(this).text();
         inputDOM.attr('placeholder', searchCategory);
-        console.log(searchCategory);
+        // console.log(searchCategory);
         //search_tmaster();
       });
       
@@ -314,6 +312,7 @@ $(document).ready(function () {
   
   //render events
   function renderEvents() {
+    eventsListDOM.html = "";
     var eventRowDOM = $('<div>');
     eventRowDOM.addClass('animated row event-row col-12 fadeInUp');
     var eventInfoDivDOM = $('<div>');
@@ -339,7 +338,7 @@ $(document).ready(function () {
       // eventPriceDOM.text("$" + (viableEvents[i].priceRanges[0].min) + " -$" + (viableEvents[i].priceRanges[0].max));
       eventURL = viableEvents[i].url;
 
-      console.log[i];
+      // console.log[i];
 
       //append to eventsListDOM
       eventImageDivDOM.append(eventImageDOM);
