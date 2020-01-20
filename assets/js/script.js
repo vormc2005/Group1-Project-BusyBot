@@ -138,6 +138,7 @@ $(document).ready(function () {
       // console.log(response.page.totalElements);
       console.log(response);
       if( response.page.totalElements === 0 ){
+        eventsListDOM.empty();
         var eventRowDOM = $('<div>');
         eventRowDOM.addClass('animated row event-row col-12 fadeInUp');
         var emptyEventDOM = $('<h4>');
