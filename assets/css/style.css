@@ -205,3 +205,20 @@ p {
   position: relative;
   margin-top: 20px;
 }
+
+.footer {
+  text-align: right;
+  margin-right: -5em;
+  margin-bottom: 1em;
+}
+
+.footer a {
+  font-family: 'Rubik' , sans-serif;
+  font-size: 1.25em;
+  color: #606060;
+}
+
+.footer a:hover {
+  color: #303030;
+  text-decoration: none;
+}

@@ -12,7 +12,6 @@ $(document).ready(function () {
   var searchAddress;
   var searchCity;
   var searchState;
-
   var searchCategory;
 
   var searchTime;
@@ -29,8 +28,8 @@ $(document).ready(function () {
   //Hardcode List of popular locations and events [ Ticket Master Quieries ]
   var locationsDropdown = ['Washington', 'New York City', 'Philadelphia'];
   var locationAttributes = ["DC", "NY", "PA"];
-  var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
-  var timeDropdown = []; //current hour + 12 hours in advance for user selection
+  var timeDropdown = [];
+  var categoryDropdown = ['Sports', 'Music', 'Theater'];
 
   // Pre-Built DOM Elements
   var searchBtn = $('#search-btn');
@@ -41,7 +40,12 @@ $(document).ready(function () {
   var categoryMenuDOM = $('.category-menu');
   var eventsListDOM = $('.events-list');
 
-  //HTML5 retrieve permission from user to get current location (lattitude and longitude)
+
+  var locationBtn = $('.location-btn');
+  var timeBtn = $('.time-btn');
+  var categoryBtn = $('.category-btn');
+  
+  //HTML5 retrieve permission from user to get current location (latitude and longitude)  
   function getCurrentLocation() {
     
     function success(position) {
@@ -197,6 +201,15 @@ $(document).ready(function () {
     searchbarDOM.animate({
       'marginTop': "1.5em"
     }, "slow");
+    if( inputDOM.val().indexOf(",") > -1 ) {
+      var cityInputArr = inputDOM.val().split(',');
+      searchCity = cityInputArr[0];
+      searchState = cityInputArr[1];
+      startPoint = searchCity+", "+searchState;
+        inputDOM.attr('placeholder', startPoint);
+      console.log(startPoint);
+      search_tmaster();
+    } 
     search_tmaster();
   });
 
@@ -270,6 +283,12 @@ $(document).ready(function () {
       categoryMenuDOM.append(categoryMenuItem);
     }
   }
+
+  //option button click allows user to fill search field with their own city and state code
+  locationBtn.on('click', function() {
+    inputDOM.attr('placeholder', 'City Name, State Code');
+  });
+  
   //render events
   function renderEvents() {
     var eventRowDOM = $('<div>');
