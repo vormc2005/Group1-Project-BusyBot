@@ -134,11 +134,11 @@ $(document).ready(function () {
       }
     }).done(function (response) {
      // Upon bad response rerender page to inform user to try new search paramaters
-      console.log(response);
-      if( response._embedded.events.length == 0 ){
+      console.log(response.page.totalElements);
+      if( response.page.totalElements === 0 ){
         var eventRowDOM = $('<div>');
         eventRowDOM.addClass('animated row event-row col-12 fadeInUp');
-        var emptyEventDOM = $('h2');
+        var emptyEventDOM = $('<h4>');
         emptyEventDOM.text("There are no events that meet your terms. Please refresh the page and try again.");
         eventRowDOM.append(emptyEventDOM);
         eventsListDOM.append(eventRowDOM);
