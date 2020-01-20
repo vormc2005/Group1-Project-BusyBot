@@ -98,7 +98,7 @@ $(document).ready(function () {
   function getStreet() {
     var apikey = '8iMbHQoKISbmKAynwHsO7ZlMhuPhWgtu';
     $.ajax({
-      url: 'http://www.mapquestapi.com/geocoding/v1/reverse',
+      url: 'https://www.mapquestapi.com/geocoding/v1/reverse',
       dataType: 'json',
       method: 'GET',
       data: {
@@ -170,7 +170,7 @@ $(document).ready(function () {
   }
   // Travel time AJAX MAPQuest API: currentAddress/qurried address to event address
   function getRoute(start, end, event, eventTime, viableEvents) {
-    $.post("http://www.mapquestapi.com/directions/v2/routematrix?key=XBEFbd4lAqBbeNeE8QyUcxIbYlnlARLz",
+    $.post("https://www.mapquestapi.com/directions/v2/routematrix?key=XBEFbd4lAqBbeNeE8QyUcxIbYlnlARLz",
       "json=" + JSON.stringify({
         'locations': [start, end],
         'options': { 'allToAll': false }
