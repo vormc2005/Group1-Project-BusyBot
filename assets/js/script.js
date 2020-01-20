@@ -11,7 +11,6 @@ $(document).ready(function () {
   var searchCity;
   var searchState;
   var searchTime;
-  var searchTimeFormatted;
   var searchCategory;
 
   //mapQuest route queries
@@ -25,7 +24,7 @@ $(document).ready(function () {
   var locationsDropdown = ['Washington', 'New York City', 'Philadelphia'];
   var locationAttributes = ["DC", "NY", "PA"];
   var timeDropdown = [];
-  var categoryDropdown = ['Sports', 'Music', 'Theater', 'Dance', 'Other'];
+  var categoryDropdown = ['Sports', 'Music', 'Theater'];
 
   // Get DOM elements
   var searchBtn = $('#search-btn');
@@ -35,6 +34,10 @@ $(document).ready(function () {
   var timeMenuDOM = $('.time-menu');
   var categoryMenuDOM = $('.category-menu');
   var eventsListDOM = $('.events-list');
+
+  var locationBtn = $('.location-btn');
+  var timeBtn = $('.time-btn');
+  var categoryBtn = $('.category-btn');
 
   //HTML5 retrieve permission from user to get current location (lat and long)
   function getCurrentLocation() {
@@ -186,6 +189,15 @@ $(document).ready(function () {
     searchbarDOM.animate({
       'marginTop': "1.5em"
     }, "slow");
+    if( inputDOM.val().indexOf(",") > -1 ) {
+      var cityInputArr = inputDOM.val().split(',');
+      searchCity = cityInputArr[0];
+      searchState = cityInputArr[1];
+      startPoint = searchCity+", "+searchState;
+        inputDOM.attr('placeholder', startPoint);
+      console.log(startPoint);
+      search_tmaster();
+    } 
     search_tmaster();
   });
 
@@ -263,6 +275,11 @@ $(document).ready(function () {
       categoryMenuDOM.append(categoryMenuItem);
     }
   }
+
+  //option button click allows user to fill search field with their own city and state code
+  locationBtn.on('click', function() {
+    inputDOM.attr('placeholder', 'City Name, State Code');
+  });
 
   //render events
   function renderEvents() {
