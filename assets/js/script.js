@@ -172,11 +172,7 @@ $(document).ready(function () {
   }
   // Travel time AJAX MAPQuest API: currentAddress/qurried address to event address
   function getRoute(start, end, event, eventTime, viableEvents) {
-<<<<<<< HEAD
     $.post("https://www.mapquestapi.com/directions/v2/routematrix?key=7wBdDHmKJfeob8pxGJYQWNArZwtLnWu5",
-=======
-    $.post("https://www.mapquestapi.com/directions/v2/routematrix?key=	6BU1KCDFBqA6NfP3ALUAz9QjAw5ZYGZZ",
->>>>>>> 144eec5009a640090bc915eaa904c1fb193245b3
       "json=" + JSON.stringify({
         'locations': [start, end],
         'options': { 'allToAll': false }
