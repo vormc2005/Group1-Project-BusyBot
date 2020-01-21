@@ -161,6 +161,7 @@ $(document).ready(function () {
     for (var i = 0; i < response._embedded.events.length; i++) {
       var event = response._embedded.events[i]; //current event
       var eventTime = response._embedded.events[i].dates.start.localDate+"T"+response._embedded.events[i].dates.start.localTime+"Z" ; //event dateTime
+      console.log(eventTime);
       var eventAddress = response._embedded.events[i]._embedded.venues[0].name + " " +
         response._embedded.events[i]._embedded.venues[0].address.line1 + ", " +
         response._embedded.events[i]._embedded.venues[0].city.name + ", " +
@@ -171,7 +172,7 @@ $(document).ready(function () {
   }
   // Travel time AJAX MAPQuest API: currentAddress/qurried address to event address
   function getRoute(start, end, event, eventTime, viableEvents) {
-    $.post("https://www.mapquestapi.com/directions/v2/routematrix?key=XBEFbd4lAqBbeNeE8QyUcxIbYlnlARLz",
+    $.post("https://www.mapquestapi.com/directions/v2/routematrix?key=7wBdDHmKJfeob8pxGJYQWNArZwtLnWu5",
       "json=" + JSON.stringify({
         'locations': [start, end],
         'options': { 'allToAll': false }
@@ -184,6 +185,9 @@ $(document).ready(function () {
         var t1 = new Date(searchTime);
         var t2 = new Date(eventTime);
         var dif = (t1 - t2)/1000; // how much time is betwwen qurried time and event start in seconds
+        console.log(eventTime);
+        console.log(t2);
+        console.log(dif);
         if(dif>travelTime) {
           viableEvents.push(event); // current event from parent function checkEvents()
         }
